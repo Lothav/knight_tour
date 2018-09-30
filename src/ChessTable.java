@@ -9,13 +9,7 @@ class ChessTable
     private int[][] table;
     private ArrayList<ChessPiece> pieces = new ArrayList<>();
 
-    public int addPiece(ChessPiece piece)
-    {
-        pieces.add(piece);
-        return pieces.size()-1;
-    }
-
-    // private constructor to avoid client applications to use constructor
+    // Private constructor to avoid client applications to use constructor
     private ChessTable()
     {
         // Init chess table
@@ -27,11 +21,21 @@ class ChessTable
         }
     }
 
+    // Get private static instance.
+    // Being private means that it cannot be modified from outside.
     public static ChessTable getInstance()
     {
         return instance;
     }
 
+    // Add a piece that implements ChessPiece interface.
+    public int addPiece(ChessPiece piece)
+    {
+        pieces.add(piece);
+        return pieces.size()-1;
+    }
+
+    // Choose a random square into chess table.
     public ChessSquare choseRandomSquare()
     {
         ChessSquare square = new ChessSquare();
@@ -43,17 +47,31 @@ class ChessTable
         return square;
     }
 
+    // Check if table is complete. That means, every square != zero.
     private boolean checkTableComplete()
     {
         for(int i = 0; i < TABLESIZE; i++) {
             for(int j = 0; j < TABLESIZE; j++) {
-                if (table[i][j] == 0) {
+                // If there's a single square not taken, table is not complete!
+                if (checkSquareNotTaken(new ChessSquare(i, j))) {
                     return false;
                 }
             }
         }
 
+        // There's no square not-taken, so, table is complete!
         return true;
+    }
+
+    private boolean checkSquareOutOfTableBounds(ChessSquare square)
+    {
+        // Check square is NOT in table bounds.
+        return square.pos_m < 0 || square.pos_n < 0 || square.pos_m >= TABLESIZE || square.pos_n >= TABLESIZE;
+    }
+
+    private boolean checkSquareNotTaken(ChessSquare square)
+    {
+        return table[square.pos_m][square.pos_n] == 0;
     }
 
     private boolean movePiece(ChessPiece piece, ChessSquare pos, int step)
@@ -64,18 +82,17 @@ class ChessTable
 
         for (ChessSquare walk_to_square: walk_to_squares) {
 
+            // If table is complete return true causing all recursion stack pops.
             if (checkTableComplete()) {
                 return true;
             }
 
-            if (walk_to_square.pos_m < 0 || walk_to_square.pos_n < 0 || walk_to_square.pos_m >= TABLESIZE || walk_to_square.pos_n >= TABLESIZE) {
+            // Check bounds and square already taken. If fits, move to next square.
+            if (checkSquareOutOfTableBounds(walk_to_square) || !checkSquareNotTaken(walk_to_square)) {
                 continue;
             }
 
-            if (table[walk_to_square.pos_m][walk_to_square.pos_n] != 0) {
-                continue;
-            }
-
+            // Recursively move piece to next allowed square increasing the step.
             if (movePiece(piece, walk_to_square, step+1)) {
                 System.out.println(this.toString());
                 return true;
