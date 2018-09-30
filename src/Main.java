@@ -2,6 +2,9 @@ public class Main
 {
     public static void main(String args[])
     {
-        //System.out.println("asdgsdag");
+        ChessTable game = ChessTable.getInstance();
+        ChessPiece knight = new Knight();
+        int piece_id = game.addPiece(knight);
+        game.movePiece(piece_id);
     }
 }

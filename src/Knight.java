@@ -4,7 +4,7 @@ public class Knight implements ChessPiece
 {
     Knight() {}
 
-    public ChessSquare[] canWalkTo(ChessSquare from)
+    public ChessSquare[] walkPossibilities(ChessSquare from)
     {
         int knight_possibilities = 8;
         ChessSquare[] squares = new ChessSquare[knight_possibilities];

@@ -1,4 +1,4 @@
 interface ChessPiece
 {
-    public ChessSquare[] canWalkTo(ChessSquare from);
+    ChessSquare[] walkPossibilities(ChessSquare from);
 }
