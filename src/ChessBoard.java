@@ -42,8 +42,8 @@ class ChessBoard
         ChessSquare square = new ChessSquare();
 
         Random rand = new Random();
-        square.pos_m = rand.nextInt(ChessBoard.BOARDSIZE-1);
-        square.pos_n = rand.nextInt(ChessBoard.BOARDSIZE-1);
+        square.setPosM(rand.nextInt(ChessBoard.BOARDSIZE-1));
+        square.setPosN(rand.nextInt(ChessBoard.BOARDSIZE-1));
 
         return square;
     }
@@ -67,12 +67,12 @@ class ChessBoard
     private boolean checkSquareOutOfBoardBounds(ChessSquare square)
     {
         // Check square is NOT in board bounds.
-        return square.pos_m < 0 || square.pos_n < 0 || square.pos_m >= BOARDSIZE || square.pos_n >= BOARDSIZE;
+        return square.getPosM() < 0 || square.getPosN() < 0 || square.getPosM() >= BOARDSIZE || square.getPosN() >= BOARDSIZE;
     }
 
     private boolean checkSquareNotTaken(ChessSquare square)
     {
-        return board[square.pos_m][square.pos_n] == 0;
+        return board[square.getPosM()][square.getPosN()] == 0;
     }
 
     private boolean movePiece(ChessPiece piece, ChessSquare pos, int step)
@@ -81,7 +81,7 @@ class ChessBoard
         piece.increaseMovesCount();
 
         // Set board matrix with the actual step.
-        board[pos.pos_m][pos.pos_n] = step;
+        board[pos.getPosM()][pos.getPosN()] = step;
 
         // Get walkPossibilities() from selected piece.
         ChessSquare[] walk_to_squares = piece.getWalkPossibilities(pos);
@@ -105,7 +105,7 @@ class ChessBoard
         }
 
         // This is not an viable path. Pop it out and choose another!
-        board[pos.pos_m][pos.pos_n] = 0;
+        board[pos.getPosM()][pos.getPosN()] = 0;
         return false;
     }
 
