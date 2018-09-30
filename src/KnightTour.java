@@ -7,9 +7,8 @@ public class KnightTour implements Iterable<ChessSquare>
             { 1, 2 }, { 1, -2 }, { -1, 2 }, { -1, -2 }
     };
 
-    private static final int BOARDSIZE = 8;
-
     private int[][] board;
+    ChessPiece piece;
 
     /**
      * Comparator that puts positions with fewer exits first,
@@ -35,41 +34,28 @@ public class KnightTour implements Iterable<ChessSquare>
     private Set<ChessSquare> path;
 
     /**
-     * Knight's tour for an BOARDSIZExBOARDSIZE board.
-     */
-    public KnightTour()
-    {
-        this(BOARDSIZE);
-    }
-
-    /**
      * Knight's tour starting at random ChessSquare.
      */
-    public KnightTour(int boardSize)
+    public KnightTour(int[][] board, ChessPiece piece)
     {
-        board = new int[BOARDSIZE][BOARDSIZE];
-        for(int i = 0; i < BOARDSIZE; i++) {
-            for(int j = 0; j < BOARDSIZE; j++) {
-                board[i][j] = 0;
-            }
-        }
+        this.board = board;
+        this.piece = piece;
 
-        this.degreesOfFreedom = initDegreesOfFreedom(boardSize);
-        this.path = new LinkedHashSet<>(boardSize * boardSize);
+        this.degreesOfFreedom = initDegreesOfFreedom(this.board.length);
+        this.path = new LinkedHashSet<>(this.board.length*this.board.length);
     }
 
-    public void solve()
+    public boolean movePiece(ChessSquare initial_pos)
     {
-        ChessSquare initial_pos = choseRandomSquare();
-
         if (this.solve(initial_pos)) {
             // Prevent Iterator.remove()
             this.path = Collections.unmodifiableSet(this.path);
-            return;
+            return true;
         }
 
         // There's no moves possible
         this.path.clear();
+        return false;
     }
 
     @Override
@@ -106,22 +92,11 @@ public class KnightTour implements Iterable<ChessSquare>
         return board;
     }
 
-    // Choose a random square into chess board.
-    public ChessSquare choseRandomSquare()
-    {
-        ChessSquare square = new ChessSquare();
-
-        Random rand = new Random();
-        square.setPosM(rand.nextInt(BOARDSIZE-1));
-        square.setPosN(rand.nextInt(BOARDSIZE-1));
-
-        return square;
-    }
-
     private boolean solve(ChessSquare p)
     {
         int step = 1;
         this.board[p.getPosM()][p.getPosN()] = step++;
+        this.piece.increaseMovesCount();
 
         this.path.add(p);
         while (this.path.size() < this.getSize() * this.getSize()) {
@@ -133,6 +108,7 @@ public class KnightTour implements Iterable<ChessSquare>
             Collections.sort(possibleMoves, this.hardestChessSquaresFirstWithLookahead1);
             this.path.add(p = possibleMoves.get(0));
             this.board[p.getPosM()][p.getPosN()] = step++;
+            this.piece.increaseMovesCount();
         }
 
         return true;
@@ -169,28 +145,5 @@ public class KnightTour implements Iterable<ChessSquare>
         }
 
         return result;
-    }
-
-    /**
-     * @return String The actual state of the chess board.
-     */
-    public String toString()
-    {
-        StringBuilder chess_board = new StringBuilder();
-
-        for(int i = 0; i < BOARDSIZE; i++) {
-            for(int j = 0; j < BOARDSIZE; j++) {
-                if(board[i][j] < 10) {
-                    chess_board.append(" ");
-                }
-                chess_board.append(Integer.toString(board[i][j]));
-                if(j != BOARDSIZE-1) {
-                    chess_board.append(", ");
-                }
-            }
-            chess_board.append("\n");
-        }
-
-        return chess_board.toString();
     }
 }

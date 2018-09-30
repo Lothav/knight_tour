@@ -9,6 +9,11 @@ public class Knight implements ChessPiece
         resetMovesCount();
     }
 
+    public int getMovesCount()
+    {
+        return moves_count;
+    }
+
     public void resetMovesCount()
     {
         moves_count = 0;

@@ -120,12 +120,17 @@ class ChessBoard
             return false;
         }
 
-        int step = 1;
         ChessPiece piece = pieces.get(piece_id);
         ChessSquare initial_pos = choseRandomSquare();
 
         piece.resetMovesCount();
-        return movePiece(piece, initial_pos, step);
+
+        if(piece instanceof Knight) {
+            KnightTour knight_tour = new KnightTour(this.board, piece);
+            return knight_tour.movePiece(initial_pos);
+        }
+
+        return movePiece(piece, initial_pos, 1);
     }
 
     /**
