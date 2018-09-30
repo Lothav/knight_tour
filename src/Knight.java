@@ -19,7 +19,7 @@ public class Knight implements ChessPiece
         moves_count++;
     }
 
-    public ChessSquare[] walkPossibilities(ChessSquare from)
+    public ChessSquare[] getWalkPossibilities(ChessSquare from)
     {
         int knight_possibilities = 8;
         ChessSquare[] squares = new ChessSquare[knight_possibilities];

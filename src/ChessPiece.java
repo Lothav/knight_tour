@@ -1,6 +1,6 @@
 interface ChessPiece
 {
-    ChessSquare[] walkPossibilities(ChessSquare from);
+    ChessSquare[] getWalkPossibilities(ChessSquare from);
 
     void resetMovesCount();
     void increaseMovesCount();

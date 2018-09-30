@@ -2,12 +2,12 @@ public class Main
 {
     public static void main(String args[])
     {
-        ChessTable game = ChessTable.getInstance();
+        ChessBoard game = ChessBoard.getInstance();
 
         ChessPiece knight = new Knight();
         int piece_id = game.addPiece(knight);
-        if (game.movePiece(piece_id)) {
-            System.out.println("Chess Table for object [" + Integer.toString(piece_id) + "] movement:");
+        if (game.tryMovingPieceAllBoard(piece_id)) {
+            System.out.println("Piece [" + Integer.toString(piece_id) + "] successful moved across all Chess Table:");
             System.out.println(game.toString());
         }
     }
