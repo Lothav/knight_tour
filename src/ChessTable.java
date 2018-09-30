@@ -97,7 +97,6 @@ class ChessTable
 
             // Recursively move piece to next allowed square increasing the step.
             if (movePiece(piece, walk_to_square, step+1)) {
-                System.out.println(this.toString());
                 return true;
             }
 
@@ -107,11 +106,11 @@ class ChessTable
         return false;
     }
 
-    public void movePiece(int piece_id)
+    public boolean movePiece(int piece_id)
     {
         if(piece_id >= pieces.size()) {
             System.out.println("ERR: piece_id[" + piece_id + "] not in Chesstable.pieces range!");
-            return;
+            return false;
         }
 
         int step = 1;
@@ -119,7 +118,7 @@ class ChessTable
         ChessSquare initial_pos = choseRandomSquare();
 
         piece.resetMovesCount();
-        movePiece(piece, initial_pos, step);
+        return movePiece(piece, initial_pos, step);
     }
 
     public String toString()
@@ -128,7 +127,13 @@ class ChessTable
 
         for(int i = 0; i < TABLESIZE; i++) {
             for(int j = 0; j < TABLESIZE; j++) {
-                chess_table.append(Integer.toString(table[i][j])).append(", ");
+                if(table[i][j] < 10) {
+                    chess_table.append(" ");
+                }
+                chess_table.append(Integer.toString(table[i][j]));
+                if(j != TABLESIZE-1) {
+                    chess_table.append(", ");
+                }
             }
             chess_table.append("\n");
         }
