@@ -2,7 +2,22 @@ import java.util.Random;
 
 public class Knight implements ChessPiece
 {
-    Knight() {}
+    private int moves_count;
+
+    Knight()
+    {
+        resetMovesCount();
+    }
+
+    public void resetMovesCount()
+    {
+        moves_count = 0;
+    }
+
+    public void increaseMovesCount()
+    {
+        moves_count++;
+    }
 
     public ChessSquare[] walkPossibilities(ChessSquare from)
     {

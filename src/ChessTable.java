@@ -6,8 +6,9 @@ class ChessTable
     private static final int TABLESIZE = 8;
 
     private static final ChessTable instance = new ChessTable();
-    private int[][] table;
     private ArrayList<ChessPiece> pieces = new ArrayList<>();
+
+    private int[][] table;
 
     // Private constructor to avoid client applications to use constructor
     private ChessTable()
@@ -76,6 +77,8 @@ class ChessTable
 
     private boolean movePiece(ChessPiece piece, ChessSquare pos, int step)
     {
+        piece.increaseMovesCount();
+
         table[pos.pos_m][pos.pos_n] = step;
 
         ChessSquare[] walk_to_squares = piece.walkPossibilities(pos);
@@ -115,6 +118,7 @@ class ChessTable
         ChessPiece piece = pieces.get(piece_id);
         ChessSquare initial_pos = choseRandomSquare();
 
+        piece.resetMovesCount();
         movePiece(piece, initial_pos, step);
     }
 
