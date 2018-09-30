@@ -49,16 +49,8 @@ class ChessSquare
         return other.pos_m == this.pos_m && other.pos_n == this.pos_n;
     }
 
-    public int hashCode() {
-        /*
-         * Arraylist.contains is evaluated by using (o==null ? e==null : o.equals(e)) as mentioned in the javadoc
-         * and Object.equals() would evaluate using hashcode() first to check if the object o is equal to object e
-         * before calling .equals() method to evaluate.
-         *
-         * As mentioned in java doc at http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html#equals(java.lang.Object)
-         * c1.equals(c2) implies that c1.hashCode()==c2.hashCode() should be satisfied
-         * which is not in this question
-         */
+    public int hashCode()
+    {
         return 0;
     }
 }

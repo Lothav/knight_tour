@@ -1,4 +1,3 @@
-import java.util.Random;
 
 public class Knight implements ChessPiece
 {
@@ -24,6 +23,12 @@ public class Knight implements ChessPiece
         moves_count++;
     }
 
+    /**
+     * Given a start position, return array with possible positions
+     *
+     * @param from start position
+     * @return ChessSquare[] array with next possible positions.
+     */
     public ChessSquare[] getWalkPossibilities(ChessSquare from)
     {
         int knight_possibilities = 8;

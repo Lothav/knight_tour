@@ -10,7 +10,9 @@ class ChessBoard
 
     private int[][] board;
 
-    // Private constructor to avoid client applications to use constructor
+    /**
+     * Private constructor to avoid client applications to use constructor
+     */
     private ChessBoard()
     {
         // Init chess board
@@ -22,21 +24,30 @@ class ChessBoard
         }
     }
 
-    // Get private static instance.
-    // Being private means that it cannot be modified from outside.
+    /**
+     * Get private static instance.
+     * Being private means that it cannot be modified from outside.
+     * @return ChessBoard instance
+     */
     public static ChessBoard getInstance()
     {
         return instance;
     }
 
-    // Add a piece that implements ChessPiece interface.
+    /**
+     * @param piece ChessPiece to be added to pieces arr
+     * @return piece id in array
+     */
     public int addPiece(ChessPiece piece)
     {
         pieces.add(piece);
         return pieces.size()-1;
     }
 
-    // Choose a random square into chess board.
+    /**
+     * Choose a random square into chess board.
+     * @return a random ChessSquare position.
+     */
     public ChessSquare choseRandomSquare()
     {
         ChessSquare square = new ChessSquare();
@@ -48,7 +59,10 @@ class ChessBoard
         return square;
     }
 
-    // Check if board is complete. That means, every square != zero.
+    /**
+     * Check if board is complete. That means, every square != zero.
+     * @return true if board is complete.
+     */
     private boolean checkBoardComplete()
     {
         for(int i = 0; i < BOARDSIZE; i++) {
@@ -64,10 +78,14 @@ class ChessBoard
         return true;
     }
 
+    /**
+     * @param square ChessSquare
+     * @return true if square is NOT in board bounds.
+     */
     private boolean checkSquareOutOfBoardBounds(ChessSquare square)
     {
-        // Check square is NOT in board bounds.
-        return square.getPosM() < 0 || square.getPosN() < 0 || square.getPosM() >= BOARDSIZE || square.getPosN() >= BOARDSIZE;
+        return square.getPosM() < 0 || square.getPosN() < 0 ||
+            square.getPosM() >= BOARDSIZE || square.getPosN() >= BOARDSIZE;
     }
 
     private boolean checkSquareNotTaken(ChessSquare square)
@@ -75,6 +93,14 @@ class ChessBoard
         return board[square.getPosM()][square.getPosN()] == 0;
     }
 
+    /**
+     * Brute-force recursive method to move piece across the board.
+     *
+     * @param piece ChessPiece
+     * @param pos ChessSquare
+     * @param step int
+     * @return true if successful move piece across all board.
+     */
     private boolean movePiece(ChessPiece piece, ChessSquare pos, int step)
     {
         // Every call of movePiece() must increment a piece movement count.
@@ -94,7 +120,8 @@ class ChessBoard
             }
 
             // Check bounds and square already taken. If fits, move to next square.
-            if (checkSquareOutOfBoardBounds(walk_to_square) || !checkSquareNotTaken(walk_to_square)) {
+            if (checkSquareOutOfBoardBounds(walk_to_square) ||
+                !checkSquareNotTaken(walk_to_square)) {
                 continue;
             }
 
@@ -116,7 +143,9 @@ class ChessBoard
     public boolean tryMovingPieceAllBoard(int piece_id)
     {
         if(piece_id >= pieces.size()) {
-            System.out.println("ERR: piece_id[" + piece_id + "] not in Chessboard.pieces range!");
+            System.out.println(
+                "ERR: piece_id[" + piece_id + "] "+
+                "not in Chessboard.pieces range!");
             return false;
         }
 
@@ -134,7 +163,7 @@ class ChessBoard
     }
 
     /**
-     * @return String The actual state of the chess board.
+     * @return String - The actual state of the chess board.
      */
     public String toString()
     {

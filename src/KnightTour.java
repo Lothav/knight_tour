@@ -2,13 +2,8 @@ import java.util.*;
 
 public class KnightTour implements Iterable<ChessSquare>
 {
-    private static final int[][] KNIGHT_MOVES = {
-            { 2, 1 }, { 2, -1 }, { -2, 1 }, { -2, -1 },
-            { 1, 2 }, { 1, -2 }, { -1, 2 }, { -1, -2 }
-    };
-
     private int[][] board;
-    ChessPiece piece;
+    private ChessPiece piece;
 
     /**
      * Comparator that puts positions with fewer exits first,
@@ -41,7 +36,7 @@ public class KnightTour implements Iterable<ChessSquare>
         this.board = board;
         this.piece = piece;
 
-        this.degreesOfFreedom = initDegreesOfFreedom(this.board.length);
+        this.degreesOfFreedom = initDegreesOfFreedom(this.piece, this.board.length);
         this.path = new LinkedHashSet<>(this.board.length*this.board.length);
     }
 
@@ -74,18 +69,22 @@ public class KnightTour implements Iterable<ChessSquare>
         return this.degreesOfFreedom[p.getPosM()][p.getPosN()];
     }
 
-    private static int[][] initDegreesOfFreedom(int boardSize)
+    private static int[][] initDegreesOfFreedom(ChessPiece piece, int boardSize)
     {
         int[][] board = new int[boardSize][boardSize];
+
+        ChessSquare aux_pos = new ChessSquare(0, 0);
+
         // Most squares allow full freedom of motion
         for (int[] row : board) {
-            Arrays.fill(row, KNIGHT_MOVES.length);
+            Arrays.fill(row, piece.getWalkPossibilities(aux_pos).length);
         }
+
         // Reduced freedom of motion in the two ranks and files near the edges
         for (int x = 0; x < board.length; x++) {
             for (int y : new int[] { 0, 1, board.length - 2, board.length - 1 }) {
-                board[x][y] = board[y][x] =
-                        possibleMoves(new ChessSquare(x, y), boardSize, Collections.<ChessSquare>emptySet()).size();
+                ChessSquare[] pos = {new ChessSquare(x, y)};
+                board[x][y] = board[y][x] = possibleMoves(pos, boardSize, Collections.<ChessSquare>emptySet()).size();
             }
         }
 
@@ -116,31 +115,30 @@ public class KnightTour implements Iterable<ChessSquare>
 
     private List<ChessSquare> possibleMoves(ChessSquare position)
     {
-        return possibleMoves(position, this.getSize(), this.path);
+        ChessSquare[] moves = piece.getWalkPossibilities(position);
+        return possibleMoves(moves, this.getSize(), this.path);
     }
 
-    private static List<ChessSquare> possibleMoves(ChessSquare position, int boardSize, Set<ChessSquare> prohibited)
+    private static List<ChessSquare> possibleMoves(ChessSquare[] moves, int boardSize, Set<ChessSquare> prohibited)
     {
-        List<ChessSquare> result = new ArrayList<>(KNIGHT_MOVES.length);
+        List<ChessSquare> result = new ArrayList<>(moves.length);
 
-        for (int[] posMove : KNIGHT_MOVES)
+        for (ChessSquare posMove : moves)
         {
-            int x = position.getPosM() + posMove[0];
-            int y = position.getPosN() + posMove[1];
+            int m = posMove.getPosM();
+            int n = posMove.getPosN();
 
-            if (x >= 0 && y >= 0 && x < boardSize && y < boardSize) {
-
-                ChessSquare possiblePos = new ChessSquare(x, y);
+            if (m >= 0 && n >= 0 && m < boardSize && n < boardSize) {
 
                 boolean found = false;
                 for (ChessSquare aProhibited : prohibited) {
-                    if (aProhibited.equals(possiblePos)) {
+                    if (aProhibited.equals(posMove)) {
                         found = true;
                         break;
                     }
                 }
 
-                if(!found) result.add(possiblePos);
+                if(!found) result.add(posMove);
             }
         }
 
